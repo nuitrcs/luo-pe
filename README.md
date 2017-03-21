@@ -12,6 +12,6 @@ template is available in S3 at
 The config file used to create the cluster was `config.pe1-luo.gpu`, using the
 following command:
 	
-	cfncluster -c config.pe1-luo.gpu create LuoCluster1
+	cfncluster -c config.pe1-luo.gpu create <ClusterName>
 
 Which must be run from the `CFN Manager` node in the art-rch-hpc AWS account.
