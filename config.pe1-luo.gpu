@@ -1,0 +1,55 @@
+[aws]
+aws_region_name = us-west-2
+
+[global]
+update_check = true
+sanity_check = true
+cluster_template = PE1GPU
+
+####### Cluster #######
+[cluster PE1GPU]
+cluster_type = ondemand
+tenancy = dedicated
+key_name = POC
+
+base_os = centos7
+custom_ami = ami-3ae1335a
+ebs_settings = custom
+shared_dir = /cluster
+template_url = https://pe-cfn.s3.amazonaws.com/Common/cfncluster-with-p2.cfn.json
+post_install = https://pe-cfn.s3.amazonaws.com/Deploy_PE1/post_install.sh
+# Post_install won't be PE unspecific (storage).
+
+scheduler = openlava
+initial_queue_size = 1
+max_queue_size = 5
+maintain_initial_size = true
+#scaling_settings = custom
+
+# This is the only difference between PEs
+vpc_settings = PE1
+placement_group = PE1
+
+# This is the only difference between clusters in the same PE
+master_instance_type = m4.large
+compute_instance_type = p2.xlarge
+
+####### General #######
+[vpc PE1]
+vpc_id = vpc-bf2a06db
+master_subnet_id = subnet-a7582dd1
+additional_sg = sg-e517de9c
+ssh_from = 165.124.223.0/24
+
+[ebs custom]
+volume_size = 10
+encrypted = true
+
+[scaling custom]
+scaling_cooldown = 600
+scaling_period = 60
+scaling_evaluation_periods = 2
+scaling_threshold = 1
+scaling_adjustment = 1
+scaling_threshold2 = 60
+scaling_adjustment2 = 10
